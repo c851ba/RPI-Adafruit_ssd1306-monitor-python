@@ -1,0 +1,12 @@
+[Unit]
+Description=I2c monitor OLED service
+After=multi-user.target
+[Service]
+WorkingDirectory=/home/pi/
+User=pi
+Type=simple
+Restart=always
+ExecStart=python3 RPI-Adafruit_ssd1306-monitor-python/OledMon.py
+
+[Install]
+WantedBy=multi-user.target

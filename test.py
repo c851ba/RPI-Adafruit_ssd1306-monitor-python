@@ -22,9 +22,8 @@ print(local_ip_address)
 print(os.name)
 
 
-time=752135214
 
-print(str(datetime.timedelta(seconds=time)))
+print(os.popen('uptime -p').read()[0:10])
 
 
 

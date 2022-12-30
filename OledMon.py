@@ -12,12 +12,11 @@ from gpiozero import CPUTemperature
 from psutil._common import bytes2human
 from PIL import Image, ImageDraw, ImageFont
 
-#screen transitiom
+#screen transition and srefresh
 Transition = 5
-#Refresh
 Refresh = 1
 
-######################### init display #####################################
+######################### init display ##############################################
 # # Define the Reset Pin
 reset_pin = digitalio.DigitalInOut(board.D4) 
 # # Display Parameters
@@ -31,41 +30,28 @@ oled = adafruit_ssd1306.SSD1306_I2C(WIDTH, HEIGHT, i2c, addr=0x3C, reset=reset_p
 # Clear display.
 oled.fill(0)
 oled.show()
-##############################################################################
+######################################################################################
 
-# Create blank image for drawing.
+#################### Create blank image for drawing ##################################
 # Make sure to create image with mode '1' for 1-bit color.
 image = Image.new("1", (oled.width, oled.height))
-
 # Get drawing object to draw on image.
 draw = ImageDraw.Draw(image)
-
 # Set font
 fontsize = 15
 #font = ImageFont.load_default()
 # use a truetype font
 font = ImageFont.truetype("arial.ttf", fontsize)
 fontb = ImageFont.truetype("arialbold.ttf", fontsize)
+#######################################################################################
 
-
-
+#########################################################################################################
 ## align text 
 # text = "Hello World!" 
 # (font_width, font_height) = font.getsize(text)
 # draw.text((oled.width//2 - font_width//2, oled.height//2 - font_height//2), text, font=font, fill=255)
-     
-
-
-# image.write_bmp_img(name="raspberry.bmp",offX=64,offY=16,invert=True)
-# oled.image(image)
-# oled.show()
-
-
-while True:
-
-    # ramUsed = (psutil.virtual_memory()[3])
-    # ramFree = (psutil.virtual_memory()[4]
-    
+#########################################################################################################
+while True:    
     # time
     for _ in range(Transition):
         draw.rectangle((0, 0, oled.width, oled.height), outline=0, fill=0)
@@ -123,13 +109,13 @@ while True:
         s.connect(('8.8.8.8', 1))  # connect() for UDP doesn't send packets
         IPAddress = s.getsockname()[0]
         
-
         (font_width, font_height) = font.getsize('System info')
         draw.text((oled.width//2 - font_width//2,0), 'System info', font=fontb, fill=255)
-        draw.text((0,fontsize), 'IP: '+ IPAddress, font=font, fill=255)
-        draw.text((0,fontsize*2), 'l2: ', font=font, fill=255)
-        draw.text((0,fontsize*3), 'l3: ', font=font, fill=255)
+        #draw.text((0,fontsize), 'L1', font=font, fill=255)
+        draw.text((0,fontsize*2), 'IP: '+ IPAddress, font=font, fill=255)
+        #draw.text((0,fontsize*3), 'l3: ', font=font, fill=255)
 
         oled.image(image)
         oled.show()
         time.sleep(Refresh)
+        
