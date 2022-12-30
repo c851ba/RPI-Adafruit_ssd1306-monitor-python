@@ -4,16 +4,19 @@ import board
 import busio
 import adafruit_ssd1306
 import digitalio
+import psutil
+import time
+import socket
+from datetime import datetime
+from gpiozero import CPUTemperature
+from psutil._common import bytes2human
 from PIL import Image, ImageDraw, ImageFont
 
-from gpiozero import CPUTemperature
-import psutil
-from psutil._common import bytes2human
-import time
-from datetime import datetime
-
+#screen transitiom
+Transition = 5
 #Refresh
-Refresh = 1.0
+Refresh = 1
+
 ######################### init display #####################################
 # # Define the Reset Pin
 reset_pin = digitalio.DigitalInOut(board.D4) 
@@ -31,7 +34,6 @@ oled.show()
 ##############################################################################
 
 # Create blank image for drawing.
-
 # Make sure to create image with mode '1' for 1-bit color.
 image = Image.new("1", (oled.width, oled.height))
 
@@ -39,20 +41,19 @@ image = Image.new("1", (oled.width, oled.height))
 draw = ImageDraw.Draw(image)
 
 # Set font
-fontsize = 16
+fontsize = 15
 #font = ImageFont.load_default()
 # use a truetype font
 font = ImageFont.truetype("arial.ttf", fontsize)
+fontb = ImageFont.truetype("arialbold.ttf", fontsize)
 
+
+
+## align text 
 # text = "Hello World!" 
 # (font_width, font_height) = font.getsize(text)
 # draw.text((oled.width//2 - font_width//2, oled.height//2 - font_height//2), text, font=font, fill=255)
-# #draw.text((0, 0), "Line2", font=font, fill=255)
-# #draw.text((0, font_height), "Line3", font=font, fill=255)
-# #draw.text((0, font_height*2), "Line4", font=font, fill=255)        
-# # Display image
-# oled.image(image)
-# oled.show()
+     
 
 
 # image.write_bmp_img(name="raspberry.bmp",offX=64,offY=16,invert=True)
@@ -61,60 +62,74 @@ font = ImageFont.truetype("arial.ttf", fontsize)
 
 
 while True:
-    now = datetime.now()
-    current_time = now.strftime("%H:%M")
-    cpu = str(psutil.cpu_percent()) + '%'
-    temp = str(int(CPUTemperature().temperature))+ '°C'
-    ramUsed = (psutil.virtual_memory()[3])
-    ramFree = (psutil.virtual_memory()[4])
 
-    #ramUsed = 'RAM Used ' + str(bytes2human(ramUsed))
-    #ramFree = 'RAM Free ' + str(bytes2human(ramFree))
-    ramUsed = (bytes2human(ramUsed))
-    ramFree = (bytes2human(ramFree))
-    #rampct = 'RAM Used (GB):' + str(psutil.virtual_memory()[3]/1000000000)
+    # ramUsed = (psutil.virtual_memory()[3])
+    # ramFree = (psutil.virtual_memory()[4]
     
     # time
-    draw.rectangle((0, 0, oled.width, oled.height), outline=0, fill=0)
-    Time= ('Time: ' + current_time)
-    (font_width, font_height) = font.getsize(Time)
-    draw.text((oled.width//2 - font_width//2, oled.height//2 - font_height//2), Time, font=font, fill=255)
-    oled.image(image)
-    oled.show()
-    time.sleep(Refresh)
-    
+    for _ in range(Transition):
+        draw.rectangle((0, 0, oled.width, oled.height), outline=0, fill=0)
+        text= 'Time'
+        current_time = datetime.now().strftime("%H:%M:%S")
+        (font_width, font_height) = font.getsize(text)
+        draw.text((oled.width//2 - font_width//2, 0), text, font=fontb, fill=255)
+
+        (font_width, font_height) = font.getsize(current_time)
+        draw.text((oled.width//2 - font_width//2, oled.height//2 - font_height//2), current_time, font=font, fill=255)
+        oled.image(image)
+        oled.show()
+        time.sleep(Refresh)
+
     # cpu used
-    draw.rectangle((0, 0, oled.width, oled.height), outline=0, fill=0)
-    CPUusage= ('CPU: '+ cpu)
-    CPUTemp =('CPU Temp: '+ temp) 
-    (font_width, font_height) = font.getsize('CPU')
-    draw.text((oled.width//2 - font_width//2,0), 'CPU', font=font, fill=255)
-    draw.text((0,fontsize), 'Usage: '+ cpu, font=font, fill=255)
-    draw.text((0,fontsize*2), 'Temp: '+ temp, font=font, fill=255)
-    oled.image(image)
-    oled.show()
-    time.sleep(Refresh)
+    for _ in range(Transition):
+        cpu = str(psutil.cpu_percent()) + '%'
+        temp = str(int(CPUTemperature().temperature))+ '°C'
+        LA= str(psutil.getloadavg()[0])
+        draw.rectangle((0, 0, oled.width, oled.height), outline=0, fill=0)
+        CPUusage= ('CPU: '+ cpu)
+        CPUTemp =('CPU Temp: '+ temp) 
+        (font_width, font_height) = font.getsize('CPU')
+        draw.text((oled.width//2 - font_width//2,0), 'CPU', font=fontb, fill=255)
+        draw.text((0,fontsize), 'Usage: '+ cpu, font=font, fill=255)
+        draw.text((0,fontsize*2), 'Temp:  '+ temp, font=font, fill=255)
+        draw.text((0,fontsize*3), 'Load: '+ LA, font=font, fill=255)
+        oled.image(image)
+        oled.show()
+        time.sleep(Refresh)
     
 
+    # RAM
+    for _ in range(Transition):
+        ramUsed = (bytes2human(psutil.virtual_memory()[3]))
+        ramFree = (bytes2human(psutil.virtual_memory()[4]))
+        rampct =  str(psutil.virtual_memory()[2])
+        draw.rectangle((0, 0, oled.width, oled.height), outline=0, fill=0)
+        # CPUusage= ('CPU: '+ cpu)
+        # CPUTemp =('CPU Temp: '+ temp) 
+        (font_width, font_height) = font.getsize('RAM')
+        draw.text((oled.width//2 - font_width//2,0), 'RAM', font=fontb, fill=255)
+        draw.text((0,fontsize), 'Used: '+ ramUsed, font=font, fill=255)
+        draw.text((0,fontsize*2), 'Free: '+ ramFree, font=font, fill=255)
+        draw.text((0,fontsize*3), 'Used: '+ rampct+'%', font=font, fill=255)
 
-    # # cpu temp
-    # lcd.clear()
-    # lcd.cursor_pos = (0, 0)
-    # lcd.write_string('CPU Temperature: ')
-    # lcd.cursor_pos = (1, 0)
-    # lcd.write_string(temp)
-    # time.sleep(3)
-    # # ram free 
-    # lcd.clear()
-    # lcd.cursor_pos = (0, 0)
-    # lcd.write_string('Memory Free')
-    # lcd.cursor_pos = (1, 0)
-    # lcd.write_string(ramFree)
-    # time.sleep(3)
-    # # ram used
-    # lcd.clear()
-    # lcd.cursor_pos = (0, 0)
-    # lcd.write_string('Memory Used') 
-    # lcd.cursor_pos = (1, 0)
-    # lcd.write_string(ramUsed)
-    # time.sleep(Refresh)
+        oled.image(image)
+        oled.show()
+        time.sleep(Refresh)
+
+    # System
+    for _ in range(Transition):
+        draw.rectangle((0, 0, oled.width, oled.height), outline=0, fill=0)
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('8.8.8.8', 1))  # connect() for UDP doesn't send packets
+        IPAddress = s.getsockname()[0]
+        
+
+        (font_width, font_height) = font.getsize('System info')
+        draw.text((oled.width//2 - font_width//2,0), 'System info', font=fontb, fill=255)
+        draw.text((0,fontsize), 'IP: '+ IPAddress, font=font, fill=255)
+        draw.text((0,fontsize*2), 'l2: ', font=font, fill=255)
+        draw.text((0,fontsize*3), 'l3: ', font=font, fill=255)
+
+        oled.image(image)
+        oled.show()
+        time.sleep(Refresh)
