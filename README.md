@@ -1,6 +1,8 @@
 # RPI-Adafruit_ssd1306-monitor-python
 
-![img](https://photos.google.com/share/AF1QipOB0plU2NxY965mtvSlcumEIZEcrk5cKNPX4pXPH2nYvwg4CpMYKUtpWuMHpSn89g/photo/AF1QipP8R32LJar_tGrhtWUlgp2iS7p9kVigJIUJ8c3k?key=RGdwV3N2S2VoWkdka0k1REp0VEVBUnRqeTRlZFdn)
+![img](https://lh3.googleusercontent.com/pw/AL9nZEUw0f0gHWmv4VvhXlT07a-jbTBSpCk2ywxk3NxR4OfT2gPtdiaCEcqRHorEoF5BLmc2YtJGFi-2NQZiA9ghP_ic7uEy4Pai2uGE68cUk53CuPJYsQz2-NkMQgHvAI5jOGcPCSz-sVe1A1SaFpbPx5v2=w2880-h948-no?authuser=0)
+
+
 
 
 
