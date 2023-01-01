@@ -7,12 +7,15 @@
 ## Install ssd1306 library 
 - [SSD1306 docs](https://learn.adafruit.com/monochrome-oled-breakouts/python-usage-2)
 
-```console
-sudo apt-get install python3-pil
- ```
+- install pip3
  ```console
 sudo apt-get install python3-pip
 ```
+- install Python Imaging Library
+```console
+sudo apt-get install python3-pil
+```
+- install  SSD1306 Library
 ```console
 pip3 install adafruit-circuitpython-ssd1306
 ```
