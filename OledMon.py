@@ -101,7 +101,20 @@ while True:
         oled.image(image)
         oled.show()
         time.sleep(Refresh)
-
+    #SD 
+    for _ in range(Transition):
+        sdUsed = (bytes2human(psutil.disk_usage('/')[1]))
+        sdFree = (bytes2human(psutil.disk_usage('/')[2]))
+        sdpct =  str(psutil.disk_usage('/')[3])
+        draw.rectangle((0, 0, oled.width, oled.height), outline=0, fill=0)
+        (font_width, font_height) = font.getsize('SD Card')
+        draw.text((oled.width//2 - font_width//2,0), 'SD Card', font=fontb, fill=255)
+        draw.text((0,fontsize), 'Used: '+ sdUsed, font=font, fill=255)
+        draw.text((0,fontsize*2), 'Free: '+ sdFree, font=font, fill=255)
+        draw.text((0,fontsize*3), 'Used: '+ sdpct+'%', font=font, fill=255)
+        oled.image(image)
+        oled.show()
+        time.sleep(Refresh)
     # System
     for _ in range(Transition):
         draw.rectangle((0, 0, oled.width, oled.height), outline=0, fill=0)
