@@ -14,6 +14,10 @@ sudo apt-get install python3-pip
 ```console
 pip3 install --upgrade Pillow
 ```
+-install ibopenjp2-7
+```console
+sudo apt install libopenjp2-7
+```
 - install  SSD1306 Library
 ```console
 pip3 install adafruit-circuitpython-ssd1306
