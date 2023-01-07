@@ -12,7 +12,7 @@ sudo apt-get install python3-pip
 ```
 - install Python Imaging Library
 ```console
-sudo apt-get install python3-pil
+pip3 install --upgrade Pillow
 ```
 - install  SSD1306 Library
 ```console
@@ -29,15 +29,24 @@ pip3 install psutil
 python3 OledMon.py
 ```
 -make Oledmon.py executable and test
-```bash
+```console
 chmod +x OledMon.py 
 ```
-```bash
+```console
 ./OledMon.py
 ```
 
+## Run OledMon as service
+move OledMon.service to /lib/systemd/system/
+```console
+sudo mv OledMon.service /lib/systemd/system/
+```
+-enable service
+```console
+sudo systemctl enable OledMon.service
+```
+- reboot
 
--
 
 full [SSD1306 documentation](https://learn.adafruit.com/monochrome-oled-breakouts/python-usage-2)
 
