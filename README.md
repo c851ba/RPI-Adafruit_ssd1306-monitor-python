@@ -4,7 +4,7 @@
 
 
 
-## Install ssd1306 library 
+## Install pip and ssd1306 library 
 
 - install pip3
  ```console
@@ -18,6 +18,26 @@ sudo apt-get install python3-pil
 ```console
 pip3 install adafruit-circuitpython-ssd1306
 ```
+## Install psutil
+- install psutil
+```console
+pip3 install psutil
+```
+
+## Test
+```console
+python3 OledMon.py
+```
+-make Oledmon.py executable and test
+```bash
+chmod +x OledMon.py 
+```
+```bash
+./OledMon.py
+```
+
+
+-
 
 full [SSD1306 documentation](https://learn.adafruit.com/monochrome-oled-breakouts/python-usage-2)
 
